@@ -1,0 +1,16 @@
+.git
+.env
+.env.*
+vendor
+node_modules
+storage
+bootstrap/cache
+tests
+scripts
+docs
+outputs
+*.zip
+*.log
+.idea
+.vscode
+README.md

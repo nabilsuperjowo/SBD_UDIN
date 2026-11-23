@@ -1,0 +1,30 @@
+const assert = require('node:assert/strict');
+const Clock = require('../public/assets/booking-clock.js');
+let elapsed = 0;
+let checks = 0;
+const check = (value, name) => { assert.ok(value, name); checks++; console.log(`LULUS ${checks} - ${name}`); };
+const clock = new Clock('2026-11-22T21:15:00.000+07:00', () => elapsed);
+check(clock.today() === '2026-11-22', 'Tanggal memakai WIB');
+check(clock.expired('2026-11-21', '23:00'), 'Hari kemarin diblokir');
+check(clock.expired('2026-11-22', '20:00'), 'Jam sebelum sekarang diblokir');
+check(clock.expired('2026-11-22', '21:00'), 'Jam berjalan 21.00 diblokir saat 21.15');
+check(!clock.expired('2026-11-22', '22:00'), 'Jam 22.00 masih tersedia saat 21.15');
+check(!clock.expired('2026-11-23', '07:00'), 'Besok pagi tidak ikut diblokir');
+elapsed = 45 * 60000;
+check(clock.expired('2026-11-22', '22:00'), 'Jam ikut diblokir setelah waktu bergulir tanpa reload');
+check(!clock.expired('2026-11-22', '23:00'), 'Jam selanjutnya tetap dapat dipilih');
+clock.sync('2026-11-22T23:59:59.500+07:00');
+check(!clock.ended('2026-11-22', '23:00', 1), 'Sesi 23.00 belum selesai sebelum tengah malam');
+elapsed += 1000;
+check(clock.today() === '2026-11-23', 'Batas tanggal berganti otomatis pada tengah malam WIB');
+check(clock.ended('2026-11-22', '23:00', 1), 'Sesi 23.00 selesai pada 00.00 hari berikutnya');
+clock.sync('2026-11-22T14:15:00.000+00:00');
+check(clock.today() === '2026-11-22' && clock.expired('2026-11-22', '21:00'), 'Waktu UTC server dikonversi dengan benar ke WIB');
+const originalDateNow = Date.now;
+Date.now = () => Date.parse('2035-01-01T00:00:00Z');
+try { check(!clock.expired('2026-11-22','22:00'), 'Jam perangkat yang salah tidak mengubah acuan server'); }
+finally { Date.now = originalDateNow; }
+check(!clock.sync('invalid') && !clock.expired('2026-11-22','22:00'), 'Respons jam tidak valid tidak merusak jam terakhir');
+check(Clock.sameSchedule({court: 1,date:'2026-11-21',time:'11:00',duration:2},{court:'1',date:'2026-11-21',time:'11:00',duration:'2'}), 'Jadwal lama dikenali meskipun tipe ID berbeda');
+check(!Clock.sameSchedule({court:1,date:'2026-11-21',time:'11:00',duration:2},{court:2,date:'2026-11-21',time:'11:00',duration:2}), 'Mengganti lapangan tidak dianggap jadwal lama yang sama');
+console.log(`BERHASIL: ${checks} pemeriksaan jam frontend.`);

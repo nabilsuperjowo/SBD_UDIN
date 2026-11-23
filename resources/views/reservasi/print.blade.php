@@ -1,0 +1,12 @@
+<!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Daftar Reservasi Galaxy Futsal Centre</title><link rel="stylesheet" href="{{ asset('assets/print.css') }}"><script src="{{ asset('assets/print.js') }}" defer></script></head><body>
+@php use App\Support\Money; use App\Services\ReservationService; @endphp
+<header><h1>Daftar Reservasi Galaxy Futsal Centre</h1><p>Jl. Raya Tajur No.37, Tajur, Bogor Timur, Kota Bogor · Futsal & Badminton</p></header>
+<nav class="print-controls"><a href="{{ route('reservasi.index',request()->only('q','tanggal','status')) }}">Kembali ke Form Reservasi</a><button type="button" id="print-button">Cetak Halaman / PDF</button></nav>
+<p class="summary">Total reservasi: <strong>{{ $rows->count() }}</strong> &nbsp;|&nbsp; Total nilai reservasi aktif: <strong>{{ Money::rupiah($value) }}</strong></p>
+@if(request()->filled('tanggal') || request()->filled('q') || request()->filled('status'))<p class="filter-note">Filter — Tanggal: {{ request('tanggal') ?: 'Semua' }} · Pencarian: {{ request('q') ?: 'Semua' }} · Status: {{ ReservationService::STATUSES[request('status')] ?? 'Semua' }}</p>@endif
+<div class="table-wrap"><table><thead><tr><th>No</th><th>Kode</th><th>Nama Pemesan</th><th>No. WhatsApp</th><th>Lapangan</th><th>Tanggal</th><th>Jam (WIB)</th><th>Durasi</th><th>Tarif/Jam</th><th>Total Bayar</th><th>Pembayaran</th><th>Status</th></tr></thead><tbody>
+@forelse($rows as $r) @php $start=\Carbon\CarbonImmutable::parse($r->tanggal.' '.$r->jam_mulai,'Asia/Jakarta'); @endphp
+<tr><td>{{ $loop->iteration }}</td><td>{{ $r->kode }}</td><td>{{ $r->nama_snapshot }}</td><td>{{ $r->whatsapp_snapshot }}</td><td>{{ $r->nama_lapangan }}</td><td>{{ $start->locale('id')->translatedFormat('d M Y') }}</td><td>{{ $start->format('H.i') }}–{{ $start->addHours($r->durasi_jam)->format('H.i') }}</td><td>{{ $r->durasi_jam }} jam</td><td>{{ Money::rupiah((string)$r->tarif_snapshot) }}</td><td>{{ Money::rupiah((string)$r->total_bayar) }}</td><td>{{ ReservationService::METHODS[$r->metode] }}</td><td>{{ ReservationService::STATUSES[$r->status] }}</td></tr>
+@empty<tr><td colspan="12" class="empty">Belum ada reservasi yang sesuai.</td></tr>@endforelse
+</tbody></table></div><footer>Dicetak {{ now()->format('d/m/Y H.i') }} WIB · {{ auth()->user()->nama }} · Nilai aktif mengecualikan reservasi dibatalkan.</footer>
+</body></html>

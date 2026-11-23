@@ -1,0 +1,59 @@
+# One free web service. The existing PostgreSQL database stays on Supabase.
+services:
+  - type: web
+    name: ssr
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /up
+    envVars:
+      - key: APP_NAME
+        value: SSR Kasir Galaxy
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_TIMEZONE
+        value: Asia/Jakarta
+      - key: APP_LOCALE
+        value: id
+      - key: APP_KEY
+        sync: false
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        value: aws-1-ap-southeast-2.pooler.supabase.com
+      - key: DB_PORT
+        value: "5432"
+      - key: DB_DATABASE
+        value: postgres
+      - key: DB_USERNAME
+        value: postgres.kbnbnvunyuwtilidinum
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_SCHEMA
+        value: public
+      - key: DB_SSLMODE
+        value: require
+      - key: DB_EMULATE_PREPARES
+        value: "false"
+      - key: SESSION_DRIVER
+        value: file
+      - key: SESSION_COOKIE
+        value: ssr_kasir_render_session
+      - key: SESSION_SECURE_COOKIE
+        value: "true"
+      - key: SESSION_SAME_SITE
+        value: lax
+      - key: CACHE_STORE
+        value: file
+      - key: QUEUE_CONNECTION
+        value: sync
+      - key: QUEUE_FAILED_DRIVER
+        value: "null"
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: MAIL_MAILER
+        value: log

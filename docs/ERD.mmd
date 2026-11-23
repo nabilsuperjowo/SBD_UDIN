@@ -1,0 +1,72 @@
+erDiagram
+    pengguna ||--o{ reservasi : mencatat
+    pengguna ||--o{ pembayaran : menerima
+    pelanggan ||--o{ reservasi : memesan
+    kategori_lapangan ||--o{ lapangan : mengelompokkan
+    lapangan ||--o{ reservasi : dipesan
+    lapangan ||--o{ jadwal_lapangan : memiliki
+    reservasi ||--o| pembayaran : mempunyai
+    reservasi o|--o{ jadwal_lapangan : menguasai_slot
+    pengguna {
+        bigint id_pengguna PK
+        varchar nama
+        varchar email UK
+        varchar password_hash
+        varchar peran
+        boolean status_aktif
+    }
+    pelanggan {
+        bigint id_pelanggan PK
+        varchar nama
+        varchar no_whatsapp UK
+        varchar email
+    }
+    kategori_lapangan {
+        bigint id_kategori PK
+        varchar nama UK
+        text deskripsi
+        boolean status_aktif
+    }
+    lapangan {
+        bigint id_lapangan PK
+        bigint id_kategori FK
+        varchar nama UK
+        varchar jenis
+        decimal harga_per_jam
+        boolean status_aktif
+    }
+    reservasi {
+        bigint id_reservasi PK
+        varchar kode UK
+        varchar request_key UK
+        bigint id_pelanggan FK
+        bigint id_lapangan FK
+        bigint id_petugas FK
+        varchar nama_snapshot
+        varchar whatsapp_snapshot
+        varchar email_snapshot
+        date tanggal
+        time jam_mulai
+        smallint durasi_jam
+        decimal tarif_snapshot
+        varchar status
+        text catatan
+        timestamptz dihapus_pada
+    }
+    pembayaran {
+        bigint id_pembayaran PK
+        bigint id_reservasi FK,UK
+        bigint id_petugas FK
+        varchar metode
+        decimal jumlah_bayar
+        varchar status
+        timestamptz dibayar_pada
+    }
+    jadwal_lapangan {
+        bigint id_slot PK
+        bigint id_lapangan FK
+        date tanggal
+        time jam_mulai
+        bigint id_reservasi FK
+        boolean ditutup
+    }
