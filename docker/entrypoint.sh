@@ -19,6 +19,10 @@ php artisan config:cache --no-interaction
 php artisan route:cache --no-interaction
 php artisan view:cache --no-interaction
 chown -R www-data:www-data storage bootstrap/cache
+
+# Ensure exactly one MPM (prefork, required by mod_php) is enabled
+a2dismod -f mpm_event mpm_worker >/dev/null 2>&1 || true
+a2enmod mpm_prefork >/dev/null 2>&1 || true
 apache2ctl -t
 
 # No database creation, migrations, seeding, or account reset during deployment.
