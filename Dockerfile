@@ -6,7 +6,8 @@ WORKDIR /var/www/html
 RUN apt-get update \
     && apt-get install -y --no-install-recommends libpq-dev libonig-dev libicu-dev libzip-dev unzip \
     && docker-php-ext-install -j"$(nproc)" pdo_pgsql mbstring intl zip bcmath opcache \
-    && a2enmod rewrite headers \
+    && (a2dismod -f mpm_event mpm_worker || true) \
+    && a2enmod mpm_prefork rewrite headers \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
