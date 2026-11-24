@@ -9,6 +9,10 @@
     $chosenTime = old('jam_mulai', $editing ? substr($editing->jam_mulai, 0, 5) : '');
     $chosenDuration = old('durasi_jam', $editing?->durasi_jam);
     $chosenStatus = old('status', $editing?->status ?? 'MENUNGGU_BAYAR');
+    $paymentPaid = $editing?->status_pembayaran === 'BERHASIL';
+    if ($paymentPaid && $chosenStatus === 'MENUNGGU_BAYAR') {
+        $chosenStatus = $editing->status;
+    }
 @endphp
 <section class="hero"><p class="eyebrow">SMART SPORT RESERVATION</p><h1>PILIH JADWAL. <span>MAIN MAKSIMAL.</span></h1><p class="muted">Form reservasi 2 Lapangan Futsal & 2 Lapangan Badminton. Jam operasional 07.00–24.00 WIB, sesi per 60 menit.</p></section>
 
@@ -38,7 +42,7 @@
     </div>
 
     <label>Metode Pembayaran<select name="metode" required><option value="">-- Pilih Metode --</option>@foreach($methods as $key=>$label)<option value="{{ $key }}" @selected(old('metode', $editing?->metode) === $key)>{{ $label }}</option>@endforeach</select></label>
-    <label>Status Reservasi<select name="status" id="status" required>@foreach($statuses as $key=>$label)<option value="{{ $key }}" @selected($chosenStatus === $key)>{{ $label }}</option>@endforeach</select></label>
+    <label>Status Reservasi<select name="status" id="status" required>@foreach($statuses as $key=>$label)<option value="{{ $key }}" @selected($chosenStatus === $key) @disabled($paymentPaid && $key === 'MENUNGGU_BAYAR')>{{ $label }}</option>@endforeach</select></label>
     <label>Catatan (opsional)<input type="text" name="catatan" value="{{ old('catatan', $editing?->catatan) }}" placeholder="Contoh: sewa bola, jumlah pemain" maxlength="1000"></label>
     <div><label>Estimasi Total Bayar</label><output id="estimate" class="estimate" aria-live="polite">Rp 0</output></div>
     <div class="form-hint"><p id="server-clock" class="muted">Waktu server: {{ now('Asia/Jakarta')->format('d/m/Y H.i.s') }} WIB</p><p id="time-hint" class="muted" role="status"></p><p id="availability-hint" class="muted" aria-live="polite">Pilih lapangan dan tanggal untuk melihat jam yang terisi.</p><p id="payment-hint" class="muted"></p></div>
