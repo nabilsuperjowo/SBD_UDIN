@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Daftar Reservasi Galaxy Futsal Centre</title><link rel="stylesheet" href="{{ asset('assets/print.css') }}"><script src="{{ asset('assets/print.js') }}" defer></script></head><body>
+<!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Daftar Reservasi Galaxy Futsal Centre</title>@include('partials.favicon')<link rel="stylesheet" href="{{ asset('assets/print.css') }}"><script src="{{ asset('assets/print.js') }}" defer></script></head><body>
 @php use App\Support\Money; use App\Services\ReservationService; @endphp
 <header><h1>Daftar Reservasi Galaxy Futsal Centre</h1><p>Jl. Raya Tajur No.37, Tajur, Bogor Timur, Kota Bogor · Futsal & Badminton</p></header>
 <nav class="print-controls"><a href="{{ route('reservasi.index',request()->only('q','tanggal','status')) }}">Kembali ke Form Reservasi</a><button type="button" id="print-button">Cetak Halaman / PDF</button></nav>

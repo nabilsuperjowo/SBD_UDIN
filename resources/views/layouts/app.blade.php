@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    @include('partials.favicon')
     <title>@yield('title', 'Reservasi Kasir') · Galaxy Futsal Centre</title>
     <script>try{document.documentElement.dataset.theme=localStorage.getItem('ssr-kasir-theme')||'dark'}catch(e){}</script>
     <link rel="stylesheet" href="{{ asset('assets/app.css') }}?v={{ filemtime(public_path('assets/app.css')) }}">
@@ -12,7 +13,7 @@
 </head>
 <body>
 <header class="topbar"><div class="container header-inner">
-    <a class="brand" href="{{ route('reservasi.index') }}" aria-label="Galaxy Futsal, beranda"><strong>GALAXY <span>FUTSAL</span></strong><small>CENTRE · TAJUR BOGOR</small></a>
+    <a class="brand" href="{{ route('reservasi.index') }}" aria-label="Galaxy Futsal, beranda"><img class="brand-logo" src="{{ asset('assets/brand/galaxy-horizontal.svg') }}?v={{ filemtime(public_path('assets/brand/galaxy-horizontal.svg')) }}" width="560" height="150" alt="Galaxy Futsal Centre · Tajur Bogor"></a>
     <div class="header-actions">
         <button class="button small ghost" type="button" data-theme-toggle>Mode terang</button>
         @auth

@@ -1,5 +1,7 @@
 :root{color-scheme:dark;--bg:#090b09;--surface:#141713;--input:#0d100b;--text:#f5f7f2;--muted:#b3bab0;--line:#2b3026;--accent:#c6f14a;--accent-text:#101409;--error:#ffb2b2;--shadow:0 10px 40px #0001}
 :root[data-theme=light]{color-scheme:light;--bg:#f4f6ef;--surface:#fff;--input:#fafbf7;--text:#1b2115;--muted:#5a6551;--line:#d7dece;--accent:#b8e530;--error:#a61d28;--shadow:0 10px 40px #32411108}
+/* Logo asli tetap terbaca pada tema gelap dan terang. */
+.brand{flex-shrink:0;max-width:100%;background:#090b09;border-radius:8px;overflow:hidden}.brand-logo{display:block;width:252px;height:auto;max-width:100%}@media(max-width:900px){.brand-logo{width:220px}}
 /* Desktop: sisakan 30% dari margin container lama (maksimum lebar lama 1080px). */
 .live-status{display:inline-block;font-size:10px;font-weight:400;color:var(--muted);margin-left:8px}.live-status:before{content:'';display:inline-block;width:6px;height:6px;margin-right:5px;border-radius:50%;background:var(--accent)}.live-status[data-state=offline]:before{background:#ecae58}[hidden]{display:none!important}
 @media(min-width:901px){body .container{width:min(calc(100% - 12px),calc(70% + 324px))}}
