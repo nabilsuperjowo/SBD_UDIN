@@ -116,7 +116,7 @@ try {
     check(Money::decimal(Money::cents('9999999999.99')) === '9999999999.99', 'Perhitungan uang tepat tanpa float');
     Auth::guard()->setUser($user);
     $http = $app->make(\Illuminate\Contracts\Http\Kernel::class);
-    foreach (['/' => 'Form dan tabel', '/reservasi/'.$new.'/edit' => 'Halaman edit', '/reservasi/cetak' => 'Halaman cetak putih', '/jadwal/tersedia?id_lapangan='.$futsal.'&tanggal='.$base['tanggal'] => 'Endpoint ketersediaan'] as $url => $name) {
+    foreach (['/' => 'Form dan tabel', '/reservasi/'.$new.'/edit' => 'Halaman edit', '/reservasi/cetak' => 'Halaman cetak', '/jadwal/tersedia?id_lapangan='.$futsal.'&tanggal='.$base['tanggal'] => 'Endpoint ketersediaan'] as $url => $name) {
         $request = \Illuminate\Http\Request::create($url, 'GET');
         $response = $http->handle($request);
         check($response->getStatusCode() === 200, $name.' HTTP 200'.($response->getStatusCode() !== 200 ? ' '.substr(strip_tags($response->getContent()),0,900) : ''));
