@@ -4,12 +4,14 @@
   "private": true,
   "scripts": {
     "vendor:pdf": "node scripts/vendor-pdf.cjs",
-    "test:pdf": "node scripts/check-pdf.cjs"
+    "test:pdf": "node scripts/check-pdf.cjs",
+    "test:confirmation": "node scripts/check-confirmation.cjs"
   },
   "dependencies": {
     "pdfmake": "0.3.15"
   },
   "devDependencies": {
+    "jsdom": "31.0.1",
     "pdf-lib": "1.17.1"
   }
 }

@@ -72,19 +72,19 @@ class ReservationController
     public function store(Request $request, ReservationService $service)
     {
         $id = $service->save($request->user(), $this->validated($request));
-        return redirect()->route('reservasi.index')->with('success', 'Reservasi berhasil disimpan.')->with('saved', $id);
+        return redirect()->route('reservasi.index')->with('success', 'Reservasi berhasil disimpan.')->with('feedback_kind', 'success')->with('saved', $id);
     }
 
     public function update(Request $request, ReservationService $service, int $id)
     {
         $service->save($request->user(), $this->validated($request), $id);
-        return redirect()->route('reservasi.index')->with('success', 'Perubahan reservasi berhasil disimpan.');
+        return redirect()->route('reservasi.index')->with('success', 'Perubahan reservasi berhasil disimpan.')->with('feedback_kind', 'success');
     }
 
     public function destroy(ReservationService $service, int $id)
     {
         $service->archive($id);
-        return redirect()->route('reservasi.index')->with('success', 'Reservasi dihapus dari daftar dan slot dilepas. Catatan pembayaran tetap tersimpan.');
+        return redirect()->route('reservasi.index')->with('success', 'Reservasi dihapus dari daftar dan slot dilepas. Catatan pembayaran tetap tersimpan.')->with('feedback_kind', 'deleted');
     }
 
     public function print(Request $request, ReservationService $service)

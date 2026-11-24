@@ -9,9 +9,6 @@
     try { localStorage.setItem('ssr-kasir-theme', theme); } catch (_) {}
     updateThemeButton();
   });
-  document.addEventListener('submit', event => {
-    if (event.target.matches('form[data-confirm]') && !window.confirm(event.target.dataset.confirm)) event.preventDefault();
-  });
   const form = document.getElementById('reservation-form');
   if (!form) return;
   const court = document.getElementById('court');
@@ -29,6 +26,8 @@
   let controller;
   let saving = false;
   let staleEdit = false;
+  let paymentApproved = false;
+  let paymentPending = false;
   function update() {
     const unchanged = scheduleUnchanged();
     const expired = clock.expired(date.value, start.value) && !unchanged;
@@ -91,8 +90,10 @@
   court.addEventListener('change', loadAvailability);
   date.addEventListener('change', loadAvailability);
   [start, duration, status].forEach(input => input.addEventListener('change', update));
-  form.addEventListener('submit', event => {
-    if (saving || staleEdit) { event.preventDefault(); return; }
+  form.addEventListener('submit', async event => {
+    const approved = paymentApproved;
+    paymentApproved = false;
+    if (saving || staleEdit || paymentPending) { event.preventDefault(); return; }
     update();
     if (!form.reportValidity()) { event.preventDefault(); return; }
     const selectedStart = start.selectedOptions[0];
@@ -102,7 +103,26 @@
       hint.textContent = 'Pilihan jam sudah lewat, bertabrakan, atau melewati 24.00. Pilih ulang sebelum menyimpan.';
       return;
     }
-    if (['TERKONFIRMASI', 'SELESAI'].includes(status.value) && !window.confirm('Pembayaran sudah diterima penuh? Status ini akan mencatat transaksi sebagai lunas.')) { event.preventDefault(); return; }
+    if (['TERKONFIRMASI', 'SELESAI'].includes(status.value) && !approved) {
+      event.preventDefault();
+      paymentPending = true;
+      try {
+        const accepted = await window.SsrConfirm.ask({
+          kind: 'payment',
+          title: 'Konfirmasi pembayaran lunas?',
+          description: 'Pastikan pembayaran pelanggan sudah diterima penuh sebelum menyimpan reservasi.',
+          note: 'Transaksi akan dicatat sebagai lunas dan tidak dapat dikembalikan ke status menunggu pembayaran.',
+          acceptLabel: 'Ya, Sudah Lunas',
+        });
+        if (accepted) {
+          paymentApproved = true;
+          paymentPending = false;
+          if (event.submitter?.isConnected) form.requestSubmit(event.submitter);
+          else form.requestSubmit();
+        }
+      } finally { paymentPending = false; }
+      return;
+    }
     saving = true;
     const button = document.getElementById('save-button');
     button.disabled = true;
@@ -165,7 +185,7 @@
       clock.sync(data.server_now);
       tick();
       failures = 0;
-      const interacting = list.contains(document.activeElement);
+      const interacting = list.contains(document.activeElement) || Boolean(document.getElementById('action-confirmation')?.open);
       if (data.changed && data.html !== null && !interacting) {
         const scroll = list.querySelector('.table-scroll')?.scrollLeft || 0;
         list.innerHTML = data.html;

@@ -9,6 +9,7 @@
     <script>try{document.documentElement.dataset.theme=localStorage.getItem('ssr-kasir-theme')||'dark'}catch(e){}</script>
     <link rel="stylesheet" href="{{ asset('assets/app.css') }}?v={{ filemtime(public_path('assets/app.css')) }}">
     <script src="{{ asset('assets/booking-clock.js') }}?v={{ filemtime(public_path('assets/booking-clock.js')) }}" defer></script>
+    <script src="{{ asset('assets/confirm-action.js') }}?v={{ filemtime(public_path('assets/confirm-action.js')) }}" defer></script>
     <script src="{{ asset('assets/app.js') }}?v={{ filemtime(public_path('assets/app.js')) }}" defer></script>
 </head>
 <body>
@@ -30,5 +31,7 @@
     @yield('content')
 </main>
 <footer class="container footer">Galaxy Futsal Centre · Jl. Raya Tajur No.37, Tajur, Bogor Timur, Kota Bogor · Operasional 07.00–24.00 WIB</footer>
+@include('partials.confirmation')
+@include('partials.operation-feedback')
 </body>
 </html>

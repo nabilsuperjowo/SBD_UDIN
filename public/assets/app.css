@@ -2,6 +2,51 @@
 :root[data-theme=light]{color-scheme:light;--bg:#f4f6ef;--surface:#fff;--input:#fafbf7;--text:#1b2115;--muted:#5a6551;--line:#d7dece;--accent:#b8e530;--error:#a61d28;--shadow:0 10px 40px #32411108}
 /* Logo asli tetap terbaca pada tema gelap dan terang. */
 .brand{flex-shrink:0;max-width:100%;background:#090b09;border-radius:8px;overflow:hidden}.brand-logo{display:block;width:252px;height:auto;max-width:100%}@media(max-width:900px){.brand-logo{width:220px}}
+/* Konfirmasi tindakan: tema mengikuti halaman, fokus ditangani dialog native. */
+html.has-confirm-modal{overflow:hidden}
+.confirm-modal{width:min(460px,calc(100vw - 32px));max-height:calc(100dvh - 48px);margin:auto;padding:26px;border:1px solid var(--line);border-radius:20px;background:var(--surface);color:var(--text);box-shadow:0 24px 90px #0006;overflow-y:auto}
+.confirm-modal[open]{animation:confirm-in .22s cubic-bezier(.16,1,.3,1) both}
+.confirm-modal::backdrop{background:#0009;backdrop-filter:blur(5px);animation:confirm-backdrop-in .2s ease-out both}
+.confirm-modal[data-closing]{animation:confirm-out .15s ease-in both}
+.confirm-modal[data-closing]::backdrop{animation:confirm-backdrop-out .15s ease-in both}
+.confirm-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:18px}
+.confirm-icon{display:grid;place-items:center;width:58px;height:58px;border:1px solid #df344c40;border-radius:18px;color:#ed6476;background:#df344c15}
+.confirm-icon svg{width:29px;height:29px}
+.confirm-modal[data-kind=payment] .confirm-icon{color:var(--accent);border-color:#a2c63850;background:#a2c63815}
+[data-theme=light] .confirm-modal[data-kind=payment] .confirm-icon{color:#487119}
+.confirm-close{display:grid;place-items:center;width:44px;height:44px;border:0;border-radius:12px;padding:10px;background:transparent;color:var(--muted);cursor:pointer}
+.confirm-close:hover{background:var(--input);color:var(--text)}
+.confirm-close svg{width:20px;height:20px}
+.confirm-eyebrow{margin:0 0 7px;color:var(--muted);font-size:10px;letter-spacing:1.8px;font-weight:700}
+.confirm-modal h2{margin:0 0 10px;font-size:24px;line-height:1.25;letter-spacing:-.6px}
+.confirm-description{margin:0;color:var(--muted);font-size:14px;line-height:1.7;overflow-wrap:anywhere}
+.confirm-note{margin:18px 0 0;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--input);color:var(--muted);font-size:12px;line-height:1.6}
+.confirm-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:24px}
+.confirm-actions .button{min-height:46px;padding-inline:20px}
+.confirm-actions .button:hover{filter:brightness(1.08)}
+.confirm-modal[data-result=true]{text-align:center;padding-top:34px}
+.confirm-modal[data-result=true] .confirm-heading{justify-content:center;margin-bottom:22px}
+.confirm-modal[data-result=true] .confirm-close{position:absolute;right:12px;top:12px}
+.confirm-modal[data-result=true] .confirm-icon{width:110px;height:110px;border:0;border-radius:50%;background:#df344c12;color:#ed6476;animation:result-pop .5s cubic-bezier(.16,1,.3,1) both}
+.confirm-modal[data-kind=success] .confirm-icon{background:#2fbd7815;color:#36cf86}
+[data-theme=light] .confirm-modal[data-kind=success] .confirm-icon{color:#168451}
+[data-theme=light] .confirm-modal[data-kind=error] .confirm-icon,[data-theme=light] .confirm-modal[data-kind=deleted] .confirm-icon{color:#ce2941}
+.confirm-modal[data-result=true] .confirm-icon svg{width:80px;height:80px}
+.confirm-modal[data-result=true] .confirm-actions .button{width:100%}
+.result-ring{stroke-dasharray:64;transform-origin:center;animation:result-ring-draw .5s ease-out both}
+.result-mark{stroke-dasharray:24;animation:result-mark-draw .32s .35s ease-out both}
+.result-mark-second{animation-delay:.48s}
+.unavailable-symbol{width:90px;height:90px;padding:10px;border-radius:50%;background:#df344c12;color:#ed6476;margin:0 0 22px;animation:result-pop .5s ease-out both}
+.unavailable-symbol svg{display:block;width:100%;height:100%}
+@keyframes result-pop{from{opacity:0;transform:scale(.65)}60%{opacity:1;transform:scale(1.06)}to{opacity:1;transform:scale(1)}}
+@keyframes result-ring-draw{from{stroke-dashoffset:64;transform:rotate(-80deg)}to{stroke-dashoffset:0;transform:rotate(0)}}
+@keyframes result-mark-draw{from{stroke-dashoffset:24}to{stroke-dashoffset:0}}
+@keyframes confirm-in{from{opacity:0;transform:translateY(18px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes confirm-out{to{opacity:0;transform:translateY(8px) scale(.98)}}
+@keyframes confirm-backdrop-in{from{opacity:0}to{opacity:1}}
+@keyframes confirm-backdrop-out{to{opacity:0}}
+@media(max-width:420px){.confirm-modal{padding:22px}.confirm-modal h2{font-size:22px}.confirm-actions .button{flex:1;padding-inline:10px}}
+@media(prefers-reduced-motion:reduce){.confirm-modal[open],.confirm-modal::backdrop{animation:none!important}}
 /* Desktop: sisakan 30% dari margin container lama (maksimum lebar lama 1080px). */
 .live-status{display:inline-block;font-size:10px;font-weight:400;color:var(--muted);margin-left:8px}.live-status:before{content:'';display:inline-block;width:6px;height:6px;margin-right:5px;border-radius:50%;background:var(--accent)}.live-status[data-state=offline]:before{background:#ecae58}[hidden]{display:none!important}
 @media(min-width:901px){body .container{width:min(calc(100% - 12px),calc(70% + 324px))}}
