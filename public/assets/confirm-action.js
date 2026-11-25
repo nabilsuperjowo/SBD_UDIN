@@ -63,10 +63,10 @@
       note.textContent = options.note;
       note.hidden = !options.note;
       accept.textContent = options.acceptLabel;
-      accept.className = `button ${kind === 'payment' || kind === 'success' ? 'primary' : 'danger'}`;
+      accept.className = `button ${['payment', 'success', 'deleted'].includes(kind) ? 'primary' : 'danger'}`;
       cancelButtons.at(-1).hidden = result;
       dialog.querySelector('.confirm-close').setAttribute('aria-label', result ? 'Tutup notifikasi' : 'Tutup konfirmasi');
-      const iconName = kind === 'deleted' ? 'error' : kind;
+      const iconName = kind === 'deleted' ? 'success' : kind;
       dialog.querySelectorAll('[data-confirm-icon]').forEach(icon => { icon.toggleAttribute('hidden', icon.dataset.confirmIcon !== iconName); });
       return new Promise(resolve => {
         pending = {resolve, previousFocus: document.activeElement};
